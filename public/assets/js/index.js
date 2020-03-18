@@ -3,18 +3,47 @@
 let transactions = [];
 let myChart;
 
-fetch("/api/transaction")
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-    // save db data on global variable
-    transactions = data;
+window.addEventListener("online", checkDatabase());
+init();
 
-    populateTotal();
-    populateTable();
-    populateChart();
-  });
+function init() {
+  fetch("/api/transaction")
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      // save db data on global variable
+      transactions = data;
+
+      populateTotal();
+      populateTable();
+      populateChart();
+      console.log("fetch /api/transaction working"); // test
+    });
+}
+
+function checkDatabase() {
+  if (checkForIndexedDb()) {
+    useIndexedDb("transactions", "TransactionStore", "get").then(results => {
+      console.log("checkDatabase working"); // test
+      console.log(results); // test
+
+      fetch("/api/transaction/bulk", {
+        method: "POST",
+        body: JSON.stringify(results),
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => response.json())
+        .then(() => {
+          useIndexedDb("transactions", "TransactionStore", "delete");
+          init();
+        });
+    });
+  }
+}
 
 function populateTotal() {
   // reduce transaction amounts to a single total value
@@ -174,7 +203,7 @@ function useIndexedDb(databaseName, storeName, method, object) {
 
     request.onupgradeneeded = function (e) {
       const db = request.result;
-      db.createObjectStore(storeName, { keyPath: "_id", autoIncrement: true });
+      db.createObjectStore(storeName, { keyPath: "indexedDb_id", autoIncrement: true });
     };
 
     request.onerror = function (e) {
@@ -197,7 +226,8 @@ function useIndexedDb(databaseName, storeName, method, object) {
           resolve(all.result);
         };
       } else if (method === "delete") {
-        store.delete(object._id);
+        // store.delete(object.indexedDb_id);
+        store.clear();
       }
       tx.oncomplete = function () {
         db.close();
