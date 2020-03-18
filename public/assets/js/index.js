@@ -1,4 +1,5 @@
-// import { populateTotal, populateTable, populateChart } from "./populate";
+import { populateTotal, populateTable, populateChart } from "./populate.js";
+import { checkForIndexedDb, useIndexedDb } from "./indexedDb.js";
 
 let transactions = [];
 let myChart;
@@ -15,9 +16,13 @@ function init() {
       // save db data on global variable
       transactions = data;
 
-      populateTotal();
-      populateTable();
-      populateChart();
+      // populateTotal();
+      // populateTable();
+      // populateChart();
+
+      populateTotal(transactions);
+      populateTable(transactions);
+      populateChart(transactions);
       console.log("fetch /api/transaction working"); // test
     });
 }
@@ -45,69 +50,69 @@ function checkDatabase() {
   }
 }
 
-function populateTotal() {
-  // reduce transaction amounts to a single total value
-  let total = transactions.reduce((total, t) => {
-    return total + parseInt(t.value);
-  }, 0);
+// function populateTotal() {
+//   // reduce transaction amounts to a single total value
+//   let total = transactions.reduce((total, t) => {
+//     return total + parseInt(t.value);
+//   }, 0);
 
-  let totalEl = document.querySelector("#total");
-  totalEl.textContent = total;
-}
+//   let totalEl = document.querySelector("#total");
+//   totalEl.textContent = total;
+// }
 
-function populateTable() {
-  let tbody = document.querySelector("#tbody");
-  tbody.innerHTML = "";
+// function populateTable() {
+//   let tbody = document.querySelector("#tbody");
+//   tbody.innerHTML = "";
 
-  transactions.forEach(transaction => {
-    // create and populate a table row
-    let tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${transaction.name}</td>
-      <td>${transaction.value}</td>
-    `;
+//   transactions.forEach(transaction => {
+//     // create and populate a table row
+//     let tr = document.createElement("tr");
+//     tr.innerHTML = `
+//       <td>${transaction.name}</td>
+//       <td>${transaction.value}</td>
+//     `;
 
-    tbody.appendChild(tr);
-  });
-}
+//     tbody.appendChild(tr);
+//   });
+// }
 
-function populateChart() {
-  // copy array and reverse it
-  let reversed = transactions.slice().reverse();
-  let sum = 0;
+// function populateChart() {
+//   // copy array and reverse it
+//   let reversed = transactions.slice().reverse();
+//   let sum = 0;
 
-  // create date labels for chart
-  let labels = reversed.map(t => {
-    let date = new Date(t.date);
-    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-  });
+//   // create date labels for chart
+//   let labels = reversed.map(t => {
+//     let date = new Date(t.date);
+//     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+//   });
 
-  // create incremental values for chart
-  let data = reversed.map(t => {
-    sum += parseInt(t.value);
-    return sum;
-  });
+//   // create incremental values for chart
+//   let data = reversed.map(t => {
+//     sum += parseInt(t.value);
+//     return sum;
+//   });
 
-  // remove old chart if it exists
-  if (myChart) {
-    myChart.destroy();
-  }
+//   // remove old chart if it exists
+//   if (myChart) {
+//     myChart.destroy();
+//   }
 
-  let ctx = document.getElementById("myChart").getContext("2d");
+//   let ctx = document.getElementById("myChart").getContext("2d");
 
-  myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        label: "Total Over Time",
-        fill: true,
-        backgroundColor: "#6666ff",
-        data
-      }]
-    }
-  });
-}
+//   myChart = new Chart(ctx, {
+//     type: 'line',
+//     data: {
+//       labels,
+//       datasets: [{
+//         label: "Total Over Time",
+//         fill: true,
+//         backgroundColor: "#6666ff",
+//         data
+//       }]
+//     }
+//   });
+// }
 
 function sendTransaction(isAdding) {
   let nameEl = document.querySelector("#t-name");
@@ -141,9 +146,13 @@ function sendTransaction(isAdding) {
   transactions.unshift(transaction);
 
   // re-run logic to populate ui with new record
-  populateChart();
-  populateTable();
-  populateTotal();
+  // populateChart();
+  // populateTable();
+  // populateTotal();
+
+  populateChart(transactions);
+  populateTable(transactions);
+  populateTotal(transactions);
 
   // also send to server
   fetch("/api/transaction", {
@@ -186,55 +195,55 @@ document.querySelector("#sub-btn").onclick = function () {
 };
 
 // Use IndexedDb
-function checkForIndexedDb() {
-  if (!window.indexedDB) {
-    console.log("Your browser doesn't support a stable version of IndexedDB.");
-    return false;
-  }
-  return true;
-}
+// function checkForIndexedDb() {
+//   if (!window.indexedDB) {
+//     console.log("Your browser doesn't support a stable version of IndexedDB.");
+//     return false;
+//   }
+//   return true;
+// }
 
-function useIndexedDb(databaseName, storeName, method, object) {
-  return new Promise((resolve, reject) => {
-    const request = window.indexedDB.open(databaseName, 1);
-    let db,
-      tx,
-      store;
+// function useIndexedDb(databaseName, storeName, method, object) {
+//   return new Promise((resolve, reject) => {
+//     const request = window.indexedDB.open(databaseName, 1);
+//     let db,
+//       tx,
+//       store;
 
-    request.onupgradeneeded = function (e) {
-      const db = request.result;
-      db.createObjectStore(storeName, { keyPath: "indexedDb_id", autoIncrement: true });
-    };
+//     request.onupgradeneeded = function (e) {
+//       const db = request.result;
+//       db.createObjectStore(storeName, { keyPath: "indexedDb_id", autoIncrement: true });
+//     };
 
-    request.onerror = function (e) {
-      console.log("There was an error");
-    };
+//     request.onerror = function (e) {
+//       console.log("There was an error");
+//     };
 
-    request.onsuccess = function (e) {
-      db = request.result;
-      tx = db.transaction(storeName, "readwrite");
-      store = tx.objectStore(storeName);
+//     request.onsuccess = function (e) {
+//       db = request.result;
+//       tx = db.transaction(storeName, "readwrite");
+//       store = tx.objectStore(storeName);
 
-      db.onerror = function (e) {
-        console.log("error");
-      };
-      if (method === "put") {
-        store.put(object);
-      } else if (method === "get") {
-        const all = store.getAll();
-        all.onsuccess = function () {
-          resolve(all.result);
-        };
-      } else if (method === "delete") {
-        // store.delete(object.indexedDb_id);
-        store.clear();
-      }
-      tx.oncomplete = function () {
-        db.close();
-      };
-    };
-  });
-}
+//       db.onerror = function (e) {
+//         console.log("error");
+//       };
+//       if (method === "put") {
+//         store.put(object);
+//       } else if (method === "get") {
+//         const all = store.getAll();
+//         all.onsuccess = function () {
+//           resolve(all.result);
+//         };
+//       } else if (method === "delete") {
+//         // store.delete(object.indexedDb_id);
+//         store.clear();
+//       }
+//       tx.oncomplete = function () {
+//         db.close();
+//       };
+//     };
+//   });
+// }
 
 function saveRecord(transaction) {
   console.log(transaction); // test
