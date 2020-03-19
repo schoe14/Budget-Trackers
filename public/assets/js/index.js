@@ -198,11 +198,11 @@ window.addEventListener("online", checkDatabase());
 
 document.querySelector("#add-btn").onclick = function () {
   sendTransaction(true, transactions);
-};
+}
 
 document.querySelector("#sub-btn").onclick = function () {
   sendTransaction(false, transactions);
-};
+}
 
 // Use IndexedDb
 // function checkForIndexedDb() {

@@ -1,6 +1,8 @@
 import { populateTotal, populateTable, populateChart } from "./populate.js";
 import { checkForIndexedDb, useIndexedDb } from "./indexedDb.js";
 
+const toast = document.querySelector("#toast");
+
 export function sendTransaction(isAdding, transactions) {
     let nameEl = document.querySelector("#t-name");
     let amountEl = document.querySelector("#t-amount");
@@ -76,6 +78,16 @@ export function sendTransaction(isAdding, transactions) {
 export function saveRecord(transaction) {
     console.log(transaction); // test
     if (checkForIndexedDb()) {
+        if (!navigator.onLine) {
+            console.log(navigator.onLine); // test
+            toast.classList.add("success");
+        }
         useIndexedDb("transactions", "TransactionStore", "put", transaction);
     }
 }
+
+function handleToastAnimationEnd() {
+    toast.removeAttribute("class");
+}
+
+toast.addEventListener("animationend", handleToastAnimationEnd);

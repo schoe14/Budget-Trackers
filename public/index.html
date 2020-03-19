@@ -7,11 +7,11 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="theme-color" content="#317EFB">
   <link rel="shortcut icon" href="assets/images/icons/icon-192x192.png" type="image/x-icon">
-
+  <link href="https://fonts.googleapis.com/css?family=Arimo|Muli&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="assets/css/styles.css">
-  <!-- <link rel="manifest" href="dist/manifest.json"> -->
-
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <link rel="manifest" href="manifest.webmanifest" />
   <title>Budget Tracker</title>
 </head>
 
@@ -44,9 +44,16 @@
     <canvas id="myChart"></canvas>
   </div>
 
+  <div id="toast">
+    Transaction added successfully!
+    <br>
+    Your offline transaction will not be reflected in the total when the app is refreshed.
+    <br>
+    Check the new total when back online.
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   <script src="assets/js/index.js" type="module"></script>
-  <!-- <script src="dist/app.bundle.js"></script> -->
   <script>
     (function () {
       if ("serviceWorker" in navigator) {
