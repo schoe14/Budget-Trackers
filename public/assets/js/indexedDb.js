@@ -38,7 +38,8 @@ export function useIndexedDb(databaseName, storeName, method, object) {
                     resolve(all.result);
                 };
             } else if (method === "delete") {
-                // store.delete(object.indexedDb_id);
+                store.delete(object.indexedDb_id);
+            } else if (method === "deleteAll") {
                 store.clear();
             }
             tx.oncomplete = function () {

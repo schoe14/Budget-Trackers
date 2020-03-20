@@ -7,6 +7,29 @@ let transactions = [];
 
 init();
 
+window.addEventListener("offline", renderDataOffline());
+
+export function renderDataOffline() {
+  if (!navigator.onLine) {
+    useIndexedDb("transactions", "TransactionStore", "get").then(results => {
+        console.log("renderDataOffline() working"); // test
+
+      if (results.length > 0) {
+        results.forEach(element => {
+          console.log(element); // test
+          transactions.unshift(element);
+        });
+      }
+    }).then(() => {
+      console.log("index.js line22: "+transactions); // test
+
+      populateTotal(transactions);
+      populateTable(transactions);
+      populateChart(transactions);
+    })
+  }
+}
+
 function init() {
   fetch("/api/transaction")
     .then(response => {
@@ -23,7 +46,23 @@ function init() {
       populateTotal(transactions);
       populateTable(transactions);
       populateChart(transactions);
-      console.log("fetch /api/transaction working"); // test
+      console.log("init() working"); // test
+
+      // ------------------------------------------------------------------------
+      // document.querySelectorAll("td .delete-btn").onclick = function () {
+      //   const dataToBeDeleted = $(this).closest("td").attr("class");
+      //   console.log(dataToBeDeleted); // test
+      //   fetch("/api/delete", {
+      //     method: "DELETE",
+      //     body: JSON.stringify(dataToBeDeleted),
+      //     headers: {
+      //       Accept: "application/json, text/plain, */*",
+      //       "Content-Type": "application/json"
+      //     }
+      //   })
+      // }
+      // --------------------------------------------------------------------------
+
     });
 }
 
@@ -43,7 +82,7 @@ function checkDatabase() {
       })
         .then(response => response.json())
         .then(() => {
-          useIndexedDb("transactions", "TransactionStore", "delete");
+          useIndexedDb("transactions", "TransactionStore", "deleteAll");
           init();
         });
     });
