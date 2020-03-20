@@ -10,6 +10,14 @@ button, input {
   font-family: 'Arimo', sans-serif;
 }
 
+i {
+  pointer-events: none;
+}
+
+.delete-btn {
+  float: right;
+}
+
 table {
   width: 100%;
 }

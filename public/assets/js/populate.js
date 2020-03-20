@@ -17,11 +17,20 @@ export function populateTable(transactions) {
     transactions.forEach(transaction => {
         // create and populate a table row
         let tr = document.createElement("tr");
-        tr.innerHTML = `
-        <td>${transaction.name}</td>
+        let content = `
         <td>${transaction.value}</td>
-      `;
+        `;
+        //     tr.innerHTML = `
+        //     <td>${transaction.name}</td>
+        //     <td>${transaction.value}</td>
+        //   `;
+        if (navigator.onLine) {
+            content = `
+            <td class=${transaction._id}>${transaction.value}<button class="delete-btn"><i class="fa fa-trash"></i></button></td>
+            `;
+        }
 
+        tr.innerHTML = `<td>${transaction.name}</td>` + content;
         tbody.appendChild(tr);
     });
 }

@@ -35,10 +35,6 @@ export function sendTransaction(isAdding, transactions) {
     transactions.unshift(transaction);
 
     // re-run logic to populate ui with new record
-    // populateChart();
-    // populateTable();
-    // populateTotal();
-
     populateChart(transactions);
     populateTable(transactions);
     populateTotal(transactions);
@@ -79,7 +75,6 @@ export function saveRecord(transaction) {
     console.log(transaction); // test
     if (checkForIndexedDb()) {
         if (!navigator.onLine) {
-            console.log(navigator.onLine); // test
             toast.classList.add("success");
         }
         useIndexedDb("transactions", "TransactionStore", "put", transaction);
