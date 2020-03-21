@@ -26,7 +26,7 @@ export function populateTable(transactions) {
         //   `;
         if (navigator.onLine) {
             content = `
-            <td class=${transaction._id}>${transaction.value}<button class="delete-btn"><i class="fa fa-trash"></i></button></td>
+            <td>${transaction.value}<button id=${transaction._id} class="delete-btn" aria-label="Right Align"><i class="fa fa-trash" aria-hidden="true"></i></button></td>
             `;
         }
 

@@ -64,8 +64,14 @@ function checkDatabase() {
   }
 }
 
-$("body").on("click", ".delete-btn", function () {
-  const dataToBeDeleted = $(this).closest("td").attr("class");
+window.onclick = function (event) {
+  console.log(event.target); // test
+  if (event.target.className === "delete-btn") {
+    deleteData(event.target.id);
+  }
+}
+
+function deleteData(dataToBeDeleted) {
   console.log(dataToBeDeleted); // test
   fetch("/api/delete", {
     method: "DELETE",
@@ -79,7 +85,7 @@ $("body").on("click", ".delete-btn", function () {
     .then(() => {
       init();
     });
-});
+}
 
 window.addEventListener("online", checkDatabase());
 window.addEventListener("offline", renderDataOffline());
