@@ -34,6 +34,9 @@ function init() {
       populateTable(transactions);
       populateChart(transactions);
       console.log("init() working"); // test
+      caches.has("runtime-cache").then(function (boolean) {
+        if (!boolean) location.reload();
+      });
     });
 }
 
