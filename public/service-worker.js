@@ -6,9 +6,9 @@ const FILES_TO_CACHE = [
     "/assets/js/indexedDb.js",
     "/assets/js/populate.js",
     "/assets/js/transaction.js",
-    "assets/images/icons/android-chrome-192x192.png",
-    "assets/images/icons/android-chrome-512x512.png",
-    "assets/images/icons/apple-touch-icon.png",
+    "/assets/images/icons/android-chrome-192x192.png",
+    "/assets/images/icons/android-chrome-512x512.png",
+    "/assets/images/icons/apple-touch-icon.png",
     "favicon.ico"
 ];
 
