@@ -24,7 +24,7 @@ export function sendTransaction(isAdding, transactions) {
         date: new Date().toISOString()
     };
 
-    console.log(transaction); // test
+    // console.log(transaction); // test
 
     // if subtracting funds, convert amount to negative number
     if (!isAdding) {
@@ -72,7 +72,7 @@ export function sendTransaction(isAdding, transactions) {
 }
 
 export function saveRecord(transaction) {
-    console.log(transaction); // test
+    // console.log(transaction); // test
     if (checkForIndexedDb()) {
         if (!navigator.onLine) {
             toast.classList.add("success");
