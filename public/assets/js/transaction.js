@@ -56,6 +56,7 @@ export function sendTransaction(isAdding, transactions) {
                 errorEl.textContent = "Missing Information";
             }
             else {
+                location.reload();
                 // clear form
                 nameEl.value = "";
                 amountEl.value = "";

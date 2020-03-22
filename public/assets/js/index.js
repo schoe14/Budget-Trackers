@@ -8,9 +8,8 @@ function renderDataOffline() {
   if (!navigator.onLine) {
     useIndexedDb("transactions", "TransactionStore", "get").then(results => {
       if (results.length > 0) {
-        // console.log("renderDataOffline() working"); // test
+        console.log("renderDataOffline() working"); // test
         results.forEach(element => {
-          // console.log(element); // test
           transactions.unshift(element);
         })
         populateTotal(transactions);
